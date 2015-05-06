@@ -25,22 +25,13 @@ def handleError(function):
             logger.info(function.__doc__ +" done")
     return handleProblems
 
-#Creating test dirs
+#Creating testing dirs and files
 @handleError
 def createDirs():
     """Creating testdirs"""
     logger.info("Trying to create test dirs and files")
-    dirslist = ['servertestdir','clienttestdir']
-    for dirname in dirslist:
-        try:
-            os.makedirs(dirname)
-        except Exception, e:
-            logger.error("There was an error during installation process: "+str(e))
-
-#Creating test files
-@handleError
-def createFiles():
-    """Creating test files"""
+    os.makedirs('servertestdir')
+    os.makedirs('clienttestdir')
     os.chdir(os.getcwd()+'/servertestdir')
     open('testfile1', 'a').close()
     open('testfile2', 'a').close()
@@ -63,7 +54,7 @@ def fillExports():
 @handleError
 def mountShare():
     """Mounting share directory"""
-    call(["exportfs","-a"])
+	call(["exportfs","-a"])
     logger.info("Trying to start nfs-kernel-server")
     call(["/etc/init.d/nfs-kernel-server","start"])
     logger.info("Trying to mount share directory")
@@ -71,7 +62,6 @@ def mountShare():
     logger.info("Directory has been successfuly mounted")
 
 createDirs()
-createFiles()
 installPackages()
 fillExports()
 mountShare()
