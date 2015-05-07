@@ -3,6 +3,8 @@
 import logging
 from subprocess import call, check_output
 import shutil
+import os
+
 #Logging description
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)

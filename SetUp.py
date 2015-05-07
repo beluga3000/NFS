@@ -47,12 +47,6 @@ def createFiles():
     os.chdir('..')
 
 @handleError
-def installPackages():
-    """Installing packages"""
-    logger.info("Trying to install packages")
-    call(["apt-get","install","-y","nfs-kernel-server","nfs-common"])
-
-@handleError
 def fillExports():
     """Filling exports list"""
     logger.info("Trying to fill export list")
@@ -63,15 +57,14 @@ def fillExports():
 @handleError
 def mountShare():
     """Mounting share directory"""
-    call(["exportfs","-a"])
     logger.info("Trying to start nfs-kernel-server")
     call(["/etc/init.d/nfs-kernel-server","start"])
+    call(["exportfs","-a"])
     logger.info("Trying to mount share directory")
     call(["mount","-o","bg,intr,hard","127.0.0.1:"+str(os.getcwd())+"/servertestdir",str(os.getcwd())+"/clienttestdir"])
     logger.info("Directory has been successfuly mounted")
 
 createDirs()
 createFiles()
-installPackages()
 fillExports()
 mountShare()

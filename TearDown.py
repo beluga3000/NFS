@@ -48,12 +48,6 @@ def deleteExports():
     logger.info("Exports file has been changed")
 
 @handleError
-def uninstallPackages():
-    """Uninstalling packages"""
-    logger.info("Trying to uninstall packages")
-    call(["apt-get","-y","--purge","remove","nfs-kernel-server","nfs-common"])
-
-@handleError
 def deleteDirs():
     """Deleting dirs"""
     logger.info("Trying to delete test dirs and files")
@@ -68,4 +62,3 @@ def deleteDirs():
 unmountShare()
 deleteExports()
 deleteDirs()
-uninstallPackages()
