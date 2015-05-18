@@ -2,16 +2,24 @@
 
 import os
 import logging
-from subprocess import call, check_output
+from subprocess import call, PIPE
+
+#Creating custom logging handler
+import crypt
+
+
+class MyHandler(logging.StreamHandler):
+    def __init__(self):
+        logging.StreamHandler.__init__(self)
+        fmt = "%(asctime)s:%(msecs).03d:%(levelname)s: %(message)s"
+        fmt_date = "%d/%m/%Y %I/%M/%S"
+        formatter = logging.Formatter(fmt, fmt_date)
+        self.setFormatter(formatter)
 
 #Logging description
-logger = logging.getLogger()
+logger = logging.getLogger("setup")
 logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s:%(msecs).03d:%(levelname)s: %(message)s", "%d/%m/%Y %I/%M/%S")
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+logger.addHandler(MyHandler())
 logger.info("Logging has been activated")
 
 #Exception handler
@@ -64,7 +72,27 @@ def mountShare():
     call(["mount","-o","bg,intr,hard","127.0.0.1:"+str(os.getcwd())+"/servertestdir",str(os.getcwd())+"/clienttestdir"])
     logger.info("Directory has been successfuly mounted")
 
-createDirs()
-createFiles()
-fillExports()
-mountShare()
+def createUser(username):
+    """Creating new user"""
+    try:
+        call(["useradd", username], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((createUser.__doc__ +" done"))
+
+
+def deleteUser(username):
+    """Deleting test user"""
+    try:
+        call(["userdel",username], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((createUser.__doc__ +" done"))
+
+if __name__=="__main__":
+    createDirs()
+    createFiles()
+    fillExports()
+    mountShare()
