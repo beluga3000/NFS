@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
 import logging
-from subprocess import call, check_output
+from subprocess import call, check_output, PIPE
 import shutil
 import os
+import SetUp
 
 #Logging description
 logger = logging.getLogger()
@@ -57,8 +58,18 @@ def deleteDirs():
             shutil.rmtree(dirname)
         except OSError, e:
             logger.warning("File is missing: "+str(e))
-		
 
+def deleteUser(username):
+    """Deleting test user"""
+    try:
+        call(["userdel",username], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((deleteUser.__doc__ +" done"))
+		
+deleteUser(SetUp.usernames[0])
+deleteUser(SetUp.usernames[1])
 unmountShare()
 deleteExports()
 deleteDirs()
