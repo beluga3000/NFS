@@ -1,22 +1,39 @@
+#!/usr/bin/python
+
+import os
 import unittest
 from subprocess import check_output
-from SetUp import logger, usernames
+import SetUp
 
 
 class TestOwnerModification(unittest.TestCase):
 
-    def setUp(self):
-        logger.info("SetUp")
+    #Saving current file owner
+    server_file_path = os.getcwd()+'/'+SetUp.dirslist[0]+'/'+SetUp.filenames[0]
+    client_file_path = os.getcwd()+'/'+SetUp.dirslist[1]+'/'+SetUp.filenames[0]
+    d_file_info = check_output(['ls', '-l', server_file_path])
+    d_owner = d_file_info.split(" ")[2]
 
+    def setUp(self):
+        SetUp.logger.info("SetUp")
+        #Changing owner
+        SetUp.changeOwner(SetUp.usernames[0], self.server_file_path)
+        file_info = check_output(['ls', '-l', self.client_file_path])
+        owner = file_info.split(" ")[2]
+        SetUp.logger.info(owner+" "+SetUp.usernames[0])
 
     def tearDown(self):
-        logger.info("tearDown after test")
-
+        #SetUp.logger.info("tearDown")
+        #SetUp.changeOwner(self.d_owner, self.file_path)
+        pass
 
     def testPositiveResult(self):
-        logger.info("Check if testuser was created")
-        self.assertEqual(int(check_output(['id', '-u', usernames[0]])), 1002)
-        self.assertEqual(int(check_output(['id', '-u', usernames[1]])), 1003)
+        #SetUp.logger.info("Assertion")
+        #file_info = check_output(['ls', '-l', self.file_path])
+        #owner = file_info.split(" ")[2]
+        #SetUp.logger.info(owner+" "+SetUp.usernames[0])
+        #self.assertEqual(owner, SetUp.usernames[0], "Message")
+        pass
 
 if __name__ == '__main__':
     unittest.main()

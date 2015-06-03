@@ -7,6 +7,8 @@ from subprocess import call, PIPE
 #Creating custom logging handler
 import crypt
 
+dirslist = ['servertestdir','clienttestdir']
+filenames = ['testfile1', 'testfile2']
 usernames = ['testuser1', 'testuser2']
 groupnames = ['testgroup1', 'testgroup2']
 
@@ -39,8 +41,7 @@ def handleError(function):
 @handleError
 def createDirs():
     """Creating testdirs"""
-    logger.info("Trying to create test dirs and files")
-    dirslist = ['servertestdir','clienttestdir']
+    logger.info("Trying to create test dirs")
     for dirname in dirslist:
         try:
             os.makedirs(dirname)
@@ -52,8 +53,8 @@ def createDirs():
 def createFiles():
     """Creating test files"""
     os.chdir(os.getcwd()+'/servertestdir')
-    open('testfile1', 'a').close()
-    open('testfile2', 'a').close()
+    open(filenames[0], 'a').close()
+    open(filenames[1], 'a').close()
     os.chdir('..')
 
 @handleError
@@ -100,6 +101,24 @@ def attachUser(username, groupname):
         logger.error("There was an error during installation process: "+str(e))
     else:
         logger.info((attachUser.__doc__ +" done"))
+
+def changeOwner(owner, filename):
+    """Changing owner"""
+    try:
+        call(['chown', owner, filename], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((changeOwner.__doc__ +" done"))
+
+def changeGroup(group, filename):
+    """Changing group"""
+    try:
+        call(['chgrp', group, filename], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((changeGroup.__doc__ +" done"))
 
 if __name__=="__main__":
     createDirs()
