@@ -7,7 +7,8 @@ from subprocess import call, PIPE
 #Creating custom logging handler
 import crypt
 
-usernames = ['testuser1','testuser2']
+usernames = ['testuser1', 'testuser2']
+groupnames = ['testgroup1', 'testgroup2']
 
 class MyHandler(logging.StreamHandler):
     def __init__(self):
@@ -82,6 +83,24 @@ def createUser(username):
     else:
         logger.info((createUser.__doc__ +" done"))
 
+def createGroup(groupname):
+    """Creating new group"""
+    try:
+        call(['groupadd', groupname], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((createGroup.__doc__ +" done"))
+
+def attachUser(username, groupname):
+    """Creating new group"""
+    try:
+        call(['adduser', username, groupname], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((attachUser.__doc__ +" done"))
+
 if __name__=="__main__":
     createDirs()
     createFiles()
@@ -89,3 +108,7 @@ if __name__=="__main__":
     mountShare()
     createUser(usernames[0])
     createUser(usernames[1])
+    createGroup(groupnames[0])
+    createGroup(groupnames[1])
+    attachUser(usernames[0], groupnames[0])
+    attachUser(usernames[1], groupnames[1])

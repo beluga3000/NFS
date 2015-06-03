@@ -67,9 +67,21 @@ def deleteUser(username):
         logger.error("There was an error during installation process: "+str(e))
     else:
         logger.info((deleteUser.__doc__ +" done"))
+
+def deleteGroup(groupname):
+    """Deleting group"""
+    try:
+        call(["groupdel",groupname], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error during installation process: "+str(e))
+    else:
+        logger.info((deleteGroup.__doc__ +" done"))
 		
 deleteUser(SetUp.usernames[0])
 deleteUser(SetUp.usernames[1])
+deleteGroup(SetUp.groupnames[0])
+deleteGroup(SetUp.groupnames[1])
 unmountShare()
 deleteExports()
 deleteDirs()
+
