@@ -4,8 +4,6 @@ import os
 import logging
 from subprocess import call, PIPE
 
-#Creating custom logging handler
-import crypt
 
 dirslist = ['servertestdir','clienttestdir']
 filenames = ['testfile1', 'testfile2']
@@ -15,8 +13,8 @@ groupnames = ['testgroup1', 'testgroup2']
 class MyHandler(logging.StreamHandler):
     def __init__(self):
         logging.StreamHandler.__init__(self)
-        fmt = "%(asctime)s:%(msecs).03d:%(levelname)s: %(message)s"
-        fmt_date = "%d/%m/%Y %I/%M/%S"
+        fmt = "%(asctime)s:%(msecs).03d:%(module)s.%(funcName)s:%(levelname)s: %(message)s"
+        fmt_date = "%d/%m/%Y %I:%M:%S"
         formatter = logging.Formatter(fmt, fmt_date)
         self.setFormatter(formatter)
 
@@ -73,7 +71,7 @@ def mountShare():
     call(["exportfs","-a"])
     logger.info("Trying to mount share directory")
     call(["mount","-o","bg,intr,hard","127.0.0.1:"+str(os.getcwd())+"/servertestdir",str(os.getcwd())+"/clienttestdir"])
-    logger.info("Directory has been successfuly mounted")
+    logger.info("Directory has been successfully mounted")
 
 def createUser(username):
     """Creating new user"""
@@ -82,7 +80,7 @@ def createUser(username):
     except Exception, e:
         logger.error("There was an error during installation process: "+str(e))
     else:
-        logger.info((createUser.__doc__ +" done"))
+        logger.info((createUser.__doc__ +" has finished ok"))
 
 def createGroup(groupname):
     """Creating new group"""
@@ -91,7 +89,7 @@ def createGroup(groupname):
     except Exception, e:
         logger.error("There was an error during installation process: "+str(e))
     else:
-        logger.info((createGroup.__doc__ +" done"))
+        logger.info((createGroup.__doc__ +" has finished ok"))
 
 def attachUser(username, groupname):
     """Creating new group"""
@@ -100,25 +98,9 @@ def attachUser(username, groupname):
     except Exception, e:
         logger.error("There was an error during installation process: "+str(e))
     else:
-        logger.info((attachUser.__doc__ +" done"))
+        logger.info((attachUser.__doc__ +" has finished ok"))
 
-def changeOwner(owner, filename):
-    """Changing owner"""
-    try:
-        call(['chown', owner, filename], stderr=PIPE)
-    except Exception, e:
-        logger.error("There was an error during installation process: "+str(e))
-    else:
-        logger.info((changeOwner.__doc__ +" done"))
 
-def changeGroup(group, filename):
-    """Changing group"""
-    try:
-        call(['chgrp', group, filename], stderr=PIPE)
-    except Exception, e:
-        logger.error("There was an error during installation process: "+str(e))
-    else:
-        logger.info((changeGroup.__doc__ +" done"))
 
 if __name__=="__main__":
     createDirs()
