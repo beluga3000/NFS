@@ -35,6 +35,15 @@ def setPermission(permission, file_path):
     else:
         logger.info((setPermission.__doc__ +" has finished OK"))
 
+def setPermissionByReference(file1_path, file2_path):
+    """Changing file permissions by reference"""
+    try:
+        call(['chmod', '--reference', file1_path, file2_path], stderr=PIPE)
+    except Exception, e:
+        logger.error("There was an error: "+str(e))
+    else:
+        logger.info((setPermissionByReference.__doc__ +" has finished OK"))
+
 def getPermissions(file_path):
     """Getting file permissions"""
     file_info = re.search('(?<=Access: \(0)(\d{3})', check_output(['stat', file_path]))

@@ -5,7 +5,7 @@ import unittest
 import Common
 import SetUp
 
-class TestOwnerModification(unittest.TestCase):
+class TestDirectPermissionModification(unittest.TestCase):
 
     def setUp(self):
         self.permissions_to_set = "000"
