@@ -48,3 +48,18 @@ def getPermissions(file_path):
     """Getting file permissions"""
     file_info = re.search('(?<=Access: \(0)(\d{3})', check_output(['stat', file_path]))
     return file_info.group(0)
+
+def getFileContent(file_path):
+    """Getting file content"""
+    logger.info("Trying to get file content")
+    with open(file_path,'r+') as f:
+        d = f.read()
+        logger.info((getFileContent.__doc__ +" has finished OK"))
+        return d
+
+def writeToFile(content, file_path):
+    """Writing to file"""
+    logger.info("Trying to write file content")
+    with open(file_path,'w+') as f:
+        f.write(content)
+        logger.info((writeToFile.__doc__ +" has finished OK"))
